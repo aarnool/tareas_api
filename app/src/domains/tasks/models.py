@@ -1,7 +1,7 @@
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from app.src.database import Base
 from app.src.domains.users.models import User   
-from sqlalchemy import String, Integer, Text, DateTime, func
+from sqlalchemy import String, Integer, Text, DateTime, func, ForeignKey
 from sqlalchemy import Enum as SQLEnum
 from enum import Enum
 from datetime import datetime
@@ -28,7 +28,6 @@ class Task(Base):
     updated_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True, onupdate=func.now())
 
     # Foreign key to the User model
-    user_id: Mapped[int] = mapped_column(Integer, nullable=False)
-    user: Mapped["User"] = relationship("User", back_populates="tasks", )
-    # existing fields
-    
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+    user: Mapped["User"] = relationship("User", back_populates="tasks")
+
