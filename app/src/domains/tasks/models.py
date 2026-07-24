@@ -1,6 +1,5 @@
 from sqlalchemy.orm import mapped_column, Mapped, relationship
-from app.src.database import Base
-from app.src.domains.users import models as user_models   
+from app.src.database import Base  
 from sqlalchemy import String, Integer, Text, DateTime, func, ForeignKey
 from sqlalchemy import Enum as SQLEnum
 from enum import Enum
@@ -29,5 +28,4 @@ class Task(Base):
 
     # Foreign key to the User model
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
-    user: Mapped["user_models.User"] = relationship("user_models.User", back_populates="tasks")
-
+    user: Mapped["User"] = relationship("User", back_populates="tasks") #type: ignore
