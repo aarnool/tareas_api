@@ -2,7 +2,7 @@ from sqlalchemy.orm import mapped_column, Mapped, relationship
 from app.src.database import Base
 from sqlalchemy import String, Integer, DateTime, func
 import datetime
-from app.src.domains.tasks.models import Task
+from app.src.domains.tasks import models as task_models 
 
 class User(Base):
     __tablename__ = "users"
@@ -14,4 +14,4 @@ class User(Base):
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
 
     # Relationship to the Task model
-    tasks: Mapped[list["Task"]] = relationship("Task", back_populates="user")
+    tasks: Mapped[list["task_models.Task"]] = relationship("task_models.Task", back_populates="user")
