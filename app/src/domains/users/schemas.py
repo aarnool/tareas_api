@@ -7,6 +7,11 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str = Field(description="The password of the user")
 
+class UserUpdate(BaseModel):
+    username: str | None = Field(default=None, description="The full name of the user")
+    email: EmailStr | None = Field(default=None, description="The email of the user")
+
+
 class UserResponse(UserBase):
     id: int = Field(description="The unique identifier of the user")
 
