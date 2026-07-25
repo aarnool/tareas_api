@@ -20,7 +20,7 @@ Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gest
 3. **Ejecutar la aplicación**:
    Puedes iniciar el servidor localmente con el siguiente comando (gracias a `fastapi-cli`):
    ```bash
-   fastapi dev app/src/main.py
+   fastapi dev src/main.py
    ```
    La API estará disponible en `http://localhost:8000`. 
    Puedes acceder a la documentación interactiva (Swagger UI) en `http://localhost:8000/docs`.
@@ -45,31 +45,32 @@ Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gest
 
 ```text
 3. API DE TAREAS SIMPLES/
-├── app/
-│   └── src/
-│       ├── core/
-│       ├── domains/
-│       │   ├── tasks/
-│       │   │   ├── dependencies.py
-│       │   │   ├── models.py
-│       │   │   ├── router.py
-│       │   │   ├── schemas.py
-│       │   │   └── service.py
-│       │   └── users/
-│       │       ├── dependencies.py
-│       │       ├── models.py
-│       │       ├── router.py
-│       │       ├── schemas.py
-│       │       └── service.py
-│       ├── config.py
-│       ├── database.py
-│       └── main.py
+├── src/
+│   ├── core/
+│   ├── domains/
+│   │   ├── tasks/
+│   │   │   ├── dependencies.py
+│   │   │   ├── models.py
+│   │   │   ├── router.py
+│   │   │   ├── schemas.py
+│   │   │   └── service.py
+│   │   └── users/
+│   │       ├── dependencies.py
+│   │       ├── models.py
+│   │       ├── router.py
+│   │       ├── schemas.py
+│   │       └── service.py
+│   ├── config.py
+│   ├── database.py
+│   └── main.py
+├── docs/
+│   ├── README.md
+│   └── README-en.md
 ├── .env
-├── pyproject.toml
-└── README.md
+└── pyproject.toml
 ```
 
-El código fuente principal se encuentra en el directorio `app/src/`:
+El código fuente principal se encuentra en el directorio `src/`:
 - `main.py`: Punto de entrada de la aplicación FastAPI.
 - `database.py` / `config.py`: Configuración y conexión a la base de datos.
 - `domains/`: Contiene la lógica separada por dominios de negocio.
