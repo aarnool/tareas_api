@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, Query, status
 from typing import Annotated
 from sqlalchemy.orm import Session
-from app.src.database import SessionLocal
-from app.src.domains.users.schemas import UserResponse, UserCreate, UserUpdate
-from app.src.domains.users.dependencies import get_db
+from src.database import SessionLocal
+from src.domains.users.schemas import UserResponse, UserCreate, UserUpdate
+from src.domains.users.dependencies import get_db
 from sqlalchemy import select
-from app.src.domains.users.models import User
+from src.domains.users.models import User
 
 router = APIRouter(
     prefix="/users",

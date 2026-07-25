@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from app.src.domains.tasks.models import TaskStatus, TaskPriority
+from src.domains.tasks.models import TaskStatus, TaskPriority
 from datetime import datetime
 
 class TaskBase(BaseModel):

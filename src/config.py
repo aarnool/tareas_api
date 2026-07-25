@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import SecretStr
 from sqlalchemy import text
-import app.src.database as database
+import src.database as database
 
 class Settings(BaseSettings):
     DB_USER: str

@@ -1,10 +1,10 @@
 from fastapi import APIRouter, status, HTTPException, Depends, Path, Body, Query
 from sqlalchemy.orm import Session
 from typing import Annotated
-from app.src.domains.tasks.dependencies import get_db
-from app.src.domains.tasks.models import Task, TaskStatus, TaskPriority
-from app.src.domains.tasks.schemas import TaskResponse, TaskCreate, TaskUpdate
-from app.src.domains.users.models import User
+from src.domains.tasks.dependencies import get_db
+from src.domains.tasks.models import Task, TaskStatus, TaskPriority
+from src.domains.tasks.schemas import TaskResponse, TaskCreate, TaskUpdate
+from src.domains.users.models import User
 
 
 router = APIRouter(
