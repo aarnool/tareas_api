@@ -6,6 +6,7 @@ from src.domains.users.schemas import UserResponse, UserCreate, UserUpdate
 from src.domains.users.dependencies import get_db
 from sqlalchemy import select
 from src.domains.users.models import User
+from src.core.security import get_password_hash
 
 router = APIRouter(
     prefix="/users",
@@ -28,6 +29,8 @@ def create_user(
         raise HTTPException(
             status_code=400, 
             detail="User with this email already exists/Usuario con este correo electrónico ya existe")
+
+    password_hash = get_password_hash(user.password)
 
     # Create a new user instance
     new_user = User(
