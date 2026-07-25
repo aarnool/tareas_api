@@ -36,7 +36,7 @@ def create_user(
     new_user = User(
         username=user.username,
         email=user.email,
-        password=user.password 
+        password=password_hash
     )
     db.add(new_user)
     db.commit()
