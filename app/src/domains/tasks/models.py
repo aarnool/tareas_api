@@ -20,7 +20,7 @@ class Task(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, index=True)
     title: Mapped[str] = mapped_column(String(128), nullable=False)
-    description: Mapped[str] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[TaskStatus] = mapped_column(SQLEnum(TaskStatus), nullable=False, default=TaskStatus.PENDING)
     priority: Mapped[TaskPriority] = mapped_column(SQLEnum(TaskPriority), nullable=False, default=TaskPriority.MEDIUM)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, server_default=func.now())
