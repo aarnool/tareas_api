@@ -1,3 +1,4 @@
+TRADUCIR:   [[README | INGLES]]    [[README-es| ESPAÑOL]]    
 # API de Tareas Simples (Task Management API)
 
 Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gestión de usuarios y tareas. 
@@ -44,7 +45,6 @@ Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gest
 ## Estructura del Proyecto
 
 ```text
-3. API DE TAREAS SIMPLES/
 ├── src/
 │   ├── core/
 │   ├── domains/
