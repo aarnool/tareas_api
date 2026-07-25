@@ -1,4 +1,4 @@
-TRADUCIR:   [[README | INGLES]]    [[README-es| ESPAÑOL]]    
+[🇬🇧 Ingles](README.md)    [🇪🇸 Español](README-es.md)    
 # API de Tareas Simples (Task Management API)
 
 Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gestión de usuarios y tareas. 
