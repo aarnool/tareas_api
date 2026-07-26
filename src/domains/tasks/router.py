@@ -1,11 +1,9 @@
-from fastapi import APIRouter, status, HTTPException, Depends, Path, Body, Query
-from sqlalchemy.orm import Session, session
-from sqlalchemy import select
+from fastapi import APIRouter, status, Depends, Path, Body, Query
+from sqlalchemy.orm import Session
 from typing import Annotated
 from src.domains.tasks.dependencies import get_db, get_current_user
-from src.domains.tasks.models import Task, TaskStatus, TaskPriority
 from src.domains.tasks.schemas import TaskResponse, TaskCreate, TaskUpdate
-from src.domains.users.models import User
+import src.domains.tasks.service as task_service
 
 
 router = APIRouter(
@@ -24,22 +22,8 @@ def create_task(
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[dict, Depends(get_current_user)]):
     
-    # Check if the user exists
     user_id = current_user["user_id"]
-    # Create a new task instance
-
-    new_task = Task(
-        title=task.title,
-        description=task.description,
-        status=task.status,
-        priority=task.priority,
-        user_id=user_id
-    )
-
-    db.add(new_task)
-    db.commit()
-    db.refresh(new_task)
-    return new_task
+    return task_service.create_task(db, task, user_id)
 
 
 @router.get("",
@@ -55,10 +39,8 @@ def get_all_tasks(
     limit: Annotated[int | None, Query( 
         description="The maximum number of tasks to retrieve/El número máximo de tareas a recuperar")] = 100):
 
-    
     user_id = current_user["user_id"]
-    tasks = db.query(Task).filter(Task.user_id == user_id).offset(start).limit(limit).all()
-    return tasks
+    return task_service.get_all_tasks(db, user_id, start, limit)
 
 
 @router.patch("/{task_id}",
@@ -73,21 +55,7 @@ def update_task(
     current_user: Annotated[dict, Depends(get_current_user)]):
 
     user_id = current_user["user_id"]
-    stmt = select(Task).where(Task.id == task_id, Task.user_id == user_id)
-    task = db.scalar(stmt)
-    if task is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found/Tarea no encontrada"
-        )
-    
-    task_data = task_update.model_dump(exclude_unset=True)
-    for key, value in task_data.items():
-        setattr(task, key, value)
-    
-    db.commit()
-    db.refresh(task)
-    return task
+    return task_service.update_task(db, task_id, task_update, user_id)
 
 
 @router.delete("/{task_id}",
@@ -99,14 +67,4 @@ def delete_task(
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[dict, Depends(get_current_user)]) -> None:
     user_id = current_user["user_id"]
-    stmt = select(Task).where(Task.id == task_id, Task.user_id == user_id)
-    task = db.scalar(stmt)
-    if task is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found/Tarea no encontrada"
-        )
-    
-    db.delete(task)
-    db.commit()
-    
+    task_service.delete_task(db, task_id, user_id)
