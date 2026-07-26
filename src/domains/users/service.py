@@ -13,7 +13,7 @@ def create_user(db: Session, user: UserCreate) -> User:
     if user_exists:
         raise HTTPException(
             status_code=400, 
-            detail="User with this email already exists/Usuario con este correo electrónico ya existe"
+            detail="Email and username already registered/Correo electonico y nombre de usuario ya registrados"
         )
 
     stmt = select(User).where(User.email == user.email)
@@ -21,7 +21,7 @@ def create_user(db: Session, user: UserCreate) -> User:
     if email_exists:
         raise HTTPException(
             status_code=400, 
-            detail="Email already registered/Correo electrónico ya registrado"
+            detail="Email and username already registered/Correo electonico y nombre de usuario ya registrados"
         )
 
     password_hash = get_password_hash(user.password)
