@@ -14,8 +14,7 @@ class TaskBase(BaseModel):
     priority: TaskPriority = Field(
         default=TaskPriority.MEDIUM, 
         description="The priority of the task/La prioridad de la tarea")
-    user_id: int = Field(
-            description="The ID of the user who owns the task/El ID del usuario que posee la tarea")
+    
 
 class TaskCreate(TaskBase):
     pass
