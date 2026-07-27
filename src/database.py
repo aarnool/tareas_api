@@ -14,7 +14,9 @@ DATABASE_URL = URL.create(
     database=config.settings.DB_NAME
 )
 
-engine = create_engine(DATABASE_URL)
+engine = create_engine(
+    DATABASE_URL,
+    pool_recycle=3600)  # Evita que las conexiones se cierren automáticamente después de un tiempo
 
 # Fábrica de sesiones de base de datos para inyectar en las peticiones HTTP
 SessionLocal = sessionmaker(
