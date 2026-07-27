@@ -1,3 +1,4 @@
+"""Módulo de lógica de negocio y operaciones de base de datos para usuarios."""
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -7,7 +8,8 @@ from src.domains.users.schemas import UserCreate
 
 
 def create_user(db: Session, user: UserCreate) -> User:
-    # Check if the user already exists
+    """Crea un nuevo usuario validando que el correo y usuario no estén registrados."""
+    # Verificar si el usuario ya existe
     stmt = select(User).where(User.username == user.username)
     user_exists = db.scalar(stmt)
     if user_exists:
@@ -26,7 +28,6 @@ def create_user(db: Session, user: UserCreate) -> User:
 
     password_hash = get_password_hash(user.password)
 
-    # Create a new user instance
     new_user = User(
         username=user.username,
         email=user.email,
@@ -39,10 +40,11 @@ def create_user(db: Session, user: UserCreate) -> User:
 
 
 def authenticate_user(db: Session, email: str, password: str) -> User:
+    """Autentica un usuario verificando sus credenciales y protegiendo contra ataques de temporización."""
     stmt = select(User).where(User.email == email)
     user = db.scalar(stmt)
     if not user:
-        verify_password(password, DUMMY_HASH)  # Prevent timing attacks
+        verify_password(password, DUMMY_HASH)  # Evitar ataques de temporización
         raise HTTPException(
             status_code=400, 
             detail="Incrorrect email or passwoard/Correo o Contraseña incorrecta"
@@ -58,6 +60,7 @@ def authenticate_user(db: Session, email: str, password: str) -> User:
 
 
 def get_user_by_id(db: Session, user_id: int) -> User:
+    """Obtiene un usuario por su identificador único."""
     stmt = select(User).where(User.id == user_id)
     user = db.scalar(stmt)
     if not user:
@@ -67,3 +70,4 @@ def get_user_by_id(db: Session, user_id: int) -> User:
         )
     
     return user
+
