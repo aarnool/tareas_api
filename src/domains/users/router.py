@@ -187,5 +187,10 @@ Termina la sesión actual del usuario eliminando la cookie de autenticación del
 )
 def logout(response: Response):
     """Cierra la sesión del usuario eliminando la cookie de autenticación del navegador."""
-    response.delete_cookie("auth_token", path="/")
+    response.delete_cookie(
+        "auth_token", 
+        path="/",
+        secure=True,
+        httponly=True,
+        samesite="none")
     return {"message": "Sesión cerrada"}
