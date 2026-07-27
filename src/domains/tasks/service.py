@@ -1,3 +1,4 @@
+"""Módulo de servicios con la lógica de negocio y acceso a datos para las tareas."""
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -6,6 +7,7 @@ from src.domains.tasks.schemas import TaskCreate, TaskUpdate
 
 
 def create_task(db: Session, task: TaskCreate, user_id: int) -> Task:
+    """Crea y almacena una nueva tarea asociada al ID del usuario autenticado."""
     new_task = Task(
         title=task.title,
         description=task.description,
@@ -21,11 +23,13 @@ def create_task(db: Session, task: TaskCreate, user_id: int) -> Task:
 
 
 def get_all_tasks(db: Session, user_id: int, start: int | None = 0, limit: int | None = 100) -> list[Task]:
+    """Obtiene una lista paginada de todas las tareas pertenecientes al usuario."""
     tasks = db.query(Task).filter(Task.user_id == user_id).offset(start).limit(limit).all()
     return tasks
 
 
 def update_task(db: Session, task_id: int, task_update: TaskUpdate, user_id: int) -> Task:
+    """Actualiza los datos de una tarea existente previa verificación de propiedad."""
     stmt = select(Task).where(Task.id == task_id, Task.user_id == user_id)
     task = db.scalar(stmt)
     if task is None:
@@ -44,6 +48,7 @@ def update_task(db: Session, task_id: int, task_update: TaskUpdate, user_id: int
 
 
 def delete_task(db: Session, task_id: int, user_id: int) -> None:
+    """Elimina una tarea de la base de datos tras verificar que pertenezca al usuario."""
     stmt = select(Task).where(Task.id == task_id, Task.user_id == user_id)
     task = db.scalar(stmt)
     if task is None:
@@ -54,3 +59,4 @@ def delete_task(db: Session, task_id: int, user_id: int) -> None:
     
     db.delete(task)
     db.commit()
+

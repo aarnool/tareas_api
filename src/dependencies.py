@@ -1,3 +1,4 @@
+"""Módulo de dependencias globales para inyección en FastAPI."""
 from src.database import SessionLocal
 from fastapi import Cookie
 from typing import Annotated
@@ -7,6 +8,7 @@ from fastapi import HTTPException, status
 
 
 def get_db():
+    """Generador de sesiones de base de datos por petición."""
     db = SessionLocal()
     try:
         yield db
@@ -15,6 +17,7 @@ def get_db():
 
 
 def get_current_user(auth_token: Annotated[str | None, Cookie()] = None) -> dict:
+    """Extrae y valida el usuario actual desde la cookie JWT `auth_token`."""
     if auth_token is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -36,5 +39,6 @@ def get_current_user(auth_token: Annotated[str | None, Cookie()] = None) -> dict
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token/Token inválido",
         )   
+
         
     

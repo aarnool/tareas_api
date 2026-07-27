@@ -1,21 +1,27 @@
-from sqlalchemy.orm import mapped_column, Mapped, relationship
-from src.database import Base  
-from sqlalchemy import String, Integer, Text, DateTime, func, ForeignKey
-from sqlalchemy import Enum as SQLEnum
-from enum import Enum
+"""Módulo de modelos SQLAlchemy y enumeraciones para el dominio de tareas."""
 from datetime import datetime
+from enum import Enum
+from sqlalchemy import DateTime, Enum as SQLEnum, ForeignKey, Integer, String, Text, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from src.database import Base
+
 
 class TaskStatus(str, Enum):
+    """Estados posibles para el seguimiento de una tarea."""
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     DONE = "done"
 
+
 class TaskPriority(str, Enum):
+    """Niveles de prioridad asignables a una tarea."""
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
 
+
 class Task(Base):
+    """Entidad ORM que representa una tarea en la base de datos."""
     __tablename__ = "tasks"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, index=True)
@@ -26,6 +32,7 @@ class Task(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, server_default=func.now())
     updated_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True, onupdate=func.now())
 
-    # Foreign key to the User model
+    # Clave foránea al modelo User
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
-    user: Mapped["User"] = relationship("User", back_populates="tasks") #type: ignore
+    user: Mapped["User"] = relationship("User", back_populates="tasks")  # type: ignore
+
