@@ -53,7 +53,7 @@ def login_user(db: Session, form_data: OAuth2PasswordRequestForm, response: Resp
         value=auth_token,
         httponly=True,
         secure=True,
-        samesite="lax",
+        samesite="none",
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
     )
 
