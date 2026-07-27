@@ -1,7 +1,7 @@
 """Módulo de lógica de negocio y operaciones de base de datos para usuarios."""
 from fastapi import HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
 from src.core.security import ACCESS_TOKEN_EXPIRE_MINUTES, DUMMY_HASH, create_access_token, get_password_hash, verify_password
 from src.domains.users.models import User
@@ -64,7 +64,7 @@ def login_user(db: Session, form_data: OAuth2PasswordRequestForm, response: Resp
 
 def authenticate_user(db: Session, email: str, password: str) -> User:
     """Autentica un usuario verificando sus credenciales y protegiendo contra ataques de temporización."""
-    stmt = select(User).where(User.email == email)
+    stmt = select(User).where(or_(User.email == email, User.username == email))
     user = db.scalar(stmt)
     if not user:
         verify_password(password, DUMMY_HASH)  # Evitar ataques de temporización
