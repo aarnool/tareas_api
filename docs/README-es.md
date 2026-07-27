@@ -16,7 +16,7 @@ Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gest
    Asegúrate de tener Python 3.14 o superior instalado.
 
 2. **Entorno Virtual**:
-   Se recomienda usar un entorno virtual y administrar las dependencias utilizando el archivo `pyproject.toml` (este proyecto utiliza `uv`).
+   Se recomienda usar un entorno virtual y administrar las dependencias utilizando el archivo `pyproject.toml` (este proyecto utiliza `uv`) o el archivo `requirements.txt` (para `pip` tradicional).
 
 3. **Ejecutar la aplicación**:
    Puedes iniciar el servidor localmente con el siguiente comando (gracias a `fastapi-cli`):
@@ -28,51 +28,74 @@ Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gest
 
 ## Endpoints de la API
 
-### Usuarios (Users)
-- **`POST /users`**: Crea un nuevo usuario.
-- **`GET /users`**: Obtiene la lista de todos los usuarios (admite paginación con `start` y `limit`).
-- **`GET /users/{user_id}`**: Obtiene un usuario específico por su ID único.
-- **`PATCH /users/{user_id}`**: Actualiza parcialmente la información de un usuario.
-- **`DELETE /users/{user_id}`**: Elimina un usuario por su ID.
+### Raíz (Root)
+- **`GET /`**: Endpoint raíz de verificación para comprobar que la API está funcionando correctamente.
 
-### Tareas (Tasks)
-- **`POST /tasks`**: Crea una nueva tarea asociada a un usuario.
-- **`GET /tasks`**: Obtiene una lista de todas las tareas (admite paginación).
-- **`GET /tasks/{task_id}`**: Obtiene una tarea específica por su ID.
-- **`PATCH /tasks/{task_id}`**: Actualiza los detalles de una tarea.
-- **`DELETE /tasks/{task_id}`**: Elimina una tarea por su ID.
+### Usuarios (Users - Autenticación y Gestión)
+- **`POST /users/register`**: Registra una nueva cuenta de usuario (valida que el usuario y correo sean únicos y cifra la contraseña).
+- **`POST /users/login`**: Autentica al usuario mediante credenciales OAuth2 (correo/usuario y contraseña) y configura una cookie segura HTTP-only JWT (`auth_token`).
+- **`GET /users/me`**: Obtiene los datos del perfil del usuario actualmente autenticado (requiere cookie `auth_token` válida).
+- **`POST /users/logout`**: Cierra la sesión del usuario eliminando la cookie de autenticación.
+
+### Tareas (Tasks - Aislamiento por Usuario)
+- **`POST /tasks`**: Crea una nueva tarea asociada al usuario autenticado (estado por defecto `pending`, prioridad por defecto `medium`).
+- **`GET /tasks`**: Obtiene una lista paginada de todas las tareas pertenecientes al usuario autenticado (admite parámetros de paginación `start` y `limit`).
+- **`PATCH /tasks/{task_id}`**: Actualiza parcial o totalmente los campos de una tarea por ID (restringido al propietario de la tarea).
+- **`DELETE /tasks/{task_id}`**: Elimina una tarea por su ID (restringido al propietario de la tarea).
 
 ## Estructura del Proyecto
 
 ```text
+├── alembic/
+│   ├── versions/
+│   ├── env.py
+│   └── script.py.mako
+├── docs/
+│   ├── README.md
+│   └── README-es.md
 ├── src/
 │   ├── core/
+│   │   ├── exceptions.py
+│   │   └── security.py
 │   ├── domains/
 │   │   ├── tasks/
-│   │   │   ├── dependencies.py
 │   │   │   ├── models.py
 │   │   │   ├── router.py
 │   │   │   ├── schemas.py
 │   │   │   └── service.py
 │   │   └── users/
-│   │       ├── dependencies.py
 │   │       ├── models.py
 │   │       ├── router.py
 │   │       ├── schemas.py
 │   │       └── service.py
 │   ├── config.py
 │   ├── database.py
-│   └── main.py
-├── docs/
-│   ├── README.md
-│   └── README-en.md
+│   ├── dependencies.py
+│   ├── main.py
+│   └── models.py
+├── tests/
+│   ├── conftest.py
+│   ├── test_tasks.py
+│   └── test_users.py
 ├── .env
-└── pyproject.toml
+├── .env.example
+├── alembic.ini
+├── pyproject.toml
+└── requirements.txt
 ```
 
 El código fuente principal se encuentra en el directorio `src/`:
-- `main.py`: Punto de entrada de la aplicación FastAPI.
-- `database.py` / `config.py`: Configuración y conexión a la base de datos.
+- `main.py`: Punto de entrada de la aplicación FastAPI, configuración de CORS y registro de rutas.
+- `config.py`: Gestión de configuración y variables de entorno mediante Pydantic Settings.
+- `database.py`: Conexión a la base de datos y creación de la sesión de SQLAlchemy.
+- `dependencies.py`: Inyección de dependencias globales de FastAPI (ej., generador de sesión de base de datos `get_db` y autenticación JWT `get_current_user`).
+- `models.py`: Módulo agregador que expone todos los modelos ORM de los dominios para las migraciones de Alembic e importaciones centralizadas.
+- `core/`: Funcionalidades transversales del núcleo (`security.py` para JWT y hashing de contraseñas, `exceptions.py` para excepciones personalizadas).
 - `domains/`: Contiene la lógica separada por dominios de negocio.
-  - `users/`: Lógica (modelos, esquemas, endpoints) para los usuarios.
-  - `tasks/`: Lógica (modelos, esquemas, endpoints) para las tareas.
+  - `users/`: Lógica (`models.py`, `schemas.py`, `router.py`, `service.py`) para usuarios y autenticación.
+  - `tasks/`: Lógica (`models.py`, `schemas.py`, `router.py`, `service.py`) para la gestión de tareas.
+
+Otros directorios y archivos clave:
+- `alembic/` y `alembic.ini`: Configuración de migraciones de base de datos y scripts de versiones con Alembic.
+- `tests/`: Pruebas automatizadas unitarias y de integración utilizando Pytest (`test_users.py`, `test_tasks.py`).
+- `pyproject.toml` / `requirements.txt`: Gestión de dependencias del proyecto (compatible con `uv` y `pip` tradicional).
