@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Depends, Path, Body, Query
 from sqlalchemy.orm import Session
 from typing import Annotated
-from src.domains.tasks.dependencies import get_db, get_current_user
+from src.dependencies import get_db, get_current_user
 from src.domains.tasks.schemas import TaskResponse, TaskCreate, TaskUpdate
 import src.domains.tasks.service as task_service
 
