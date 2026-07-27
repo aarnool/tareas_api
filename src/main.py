@@ -26,3 +26,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+async def root():
+    """Ruta raíz para verificar que la API está funcionando."""
+    return {"message": "API is running/API está funcionando"}
