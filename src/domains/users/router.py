@@ -98,24 +98,7 @@ def login_user(
     response: Response
 ):
     """Autentica al usuario verificando sus credenciales y genera la cookie de sesión JWT."""
-    user = user_service.authenticate_user(db, form_data.username, form_data.password)
-
-    auth_token = create_access_token(
-        data={"sub": user.username, "user_id": user.id}
-    )
-
-    response.set_cookie(
-        key="auth_token",
-        value=auth_token,
-        httponly=True,
-        secure=True,
-        samesite="lax",
-        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
-    )
-
-    return {
-        "message": "Login successful/Inicio de sesión exitoso"
-    }
+    return user_service.login_user(db, form_data, response)
 
 
 @router.get(

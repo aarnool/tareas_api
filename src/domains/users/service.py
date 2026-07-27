@@ -1,10 +1,12 @@
 """Módulo de lógica de negocio y operaciones de base de datos para usuarios."""
-from fastapi import HTTPException, status
+from fastapi import HTTPException, Response, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from src.core.security import DUMMY_HASH, get_password_hash, verify_password
+from src.core.security import ACCESS_TOKEN_EXPIRE_MINUTES, DUMMY_HASH, create_access_token, get_password_hash, verify_password
 from src.domains.users.models import User
 from src.domains.users.schemas import UserCreate
+import src.domains.users.service as user_service
 
 
 def create_user(db: Session, user: UserCreate) -> User:
@@ -37,6 +39,27 @@ def create_user(db: Session, user: UserCreate) -> User:
     db.commit()
     db.refresh(new_user)
     return new_user
+
+def login_user(db: Session, form_data: OAuth2PasswordRequestForm, response: Response):
+    """Inicia sesión de un usuario verificando sus credenciales."""
+    user = user_service.authenticate_user(db, form_data.username, form_data.password)
+    
+    auth_token = create_access_token(
+        data={"sub": user.username, "user_id": user.id}
+    )
+
+    response.set_cookie(
+        key="auth_token",
+        value=auth_token,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    )
+
+    return {
+        "message": "Login successful/Inicio de sesión exitoso"
+    }
 
 
 def authenticate_user(db: Session, email: str, password: str) -> User:
