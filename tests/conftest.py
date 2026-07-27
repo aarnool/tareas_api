@@ -7,8 +7,7 @@ from sqlalchemy.pool import StaticPool
 from src.main import app
 from src.database import Base
 from src.models import User, Task
-from src.domains.users.dependencies import get_db as user_get
-from src.domains.tasks.dependencies import get_db as task_get
+from src.dependencies import get_db
 
 
 TEST_DATABASE_URL = "sqlite:///:memory:"  # Use an in-memory SQLite database for testing
@@ -38,8 +37,8 @@ def client(db_session):
     def override_get_db():
         yield db_session
 
-    app.dependency_overrides[user_get] = override_get_db
-    app.dependency_overrides[task_get] = override_get_db
+    app.dependency_overrides[get_db] = override_get_db
+
   
     with TestClient(app, base_url="https://testserver") as test_client:
         yield test_client
