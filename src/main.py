@@ -5,12 +5,13 @@ from src.domains.users.router import router as user_router
 from fastapi.middleware.cors import CORSMiddleware
 from src.config import settings
 
+FRONTEND_URL = (settings.FRONTEND_URL).rstrip("/")  # Elimina la barra final si existe para evitar problemas de CORS
 origins = [
     "http://localhost",
     "http://localhost:3000",
     "http://localhost:8000",
     "http://localhost:5173",
-    settings.FRONTEND_URL  # Agrega la URL del frontend desde la configuración
+    FRONTEND_URL  # Agrega la URL del frontend desde la configuración
     ]
 
 
