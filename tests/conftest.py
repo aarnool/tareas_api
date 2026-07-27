@@ -7,7 +7,8 @@ from sqlalchemy.pool import StaticPool
 from src.main import app
 from src.database import Base
 from src.models import User, Task
-from src.domains.users.dependencies import get_db
+from src.domains.users.dependencies import get_db as user_get
+from src.domains.tasks.dependencies import get_db as task_get
 
 
 TEST_DATABASE_URL = "sqlite:///:memory:"  # Use an in-memory SQLite database for testing
@@ -34,11 +35,25 @@ def db_session():
 @pytest.fixture()
 def client(db_session):
 
-    def overryide_get_db():
+    def override_get_db():
         yield db_session
 
-    app.dependency_overrides[get_db] = overryide_get_db
-    with TestClient(app) as test_client:
+    app.dependency_overrides[user_get] = override_get_db
+    app.dependency_overrides[task_get] = override_get_db
+  
+    with TestClient(app, base_url="https://testserver") as test_client:
         yield test_client
 
     app.dependency_overrides.clear()
+
+
+@pytest.fixture()
+def auth_client(client):
+    payload = {
+        "username": "testuser",
+        "email": "testuser@test.com",
+        "password": "testpassword"
+    }
+    client.post("/users/register", json=payload)
+    client.post("/users/login", data={"username": "testuser@test.com", "password": "testpassword"})
+    return client
