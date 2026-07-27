@@ -2,8 +2,6 @@
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import text
-import src.database as database
-
 
 class Settings(BaseSettings):
     """Configuración global de la aplicación cargada desde el archivo `.env` o variables del sistema."""
@@ -13,6 +11,7 @@ class Settings(BaseSettings):
     DB_PORT: int
     DB_NAME: str
     SECRET_KEY: SecretStr  # Clave secreta para firmar tokens de seguridad JWT
+    FRONTEND_URL: str  # URL del frontend para permitir solicitudes CORS
 
     model_config = SettingsConfigDict(
         env_file=".env",
