@@ -43,6 +43,32 @@ Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gest
 - **`PATCH /tasks/{task_id}`**: Actualiza parcial o totalmente los campos de una tarea por ID (restringido al propietario de la tarea).
 - **`DELETE /tasks/{task_id}`**: Elimina una tarea por su ID (restringido al propietario de la tarea).
 
+## Diagramas y Arquitectura
+
+### Modelo Físico
+![Modelo Físico](public/physical_model.png)
+
+### Diagrama de Secuencia de como la API crea un Token JWT
+![Diagrama de Secuencia](public/sequence_diagram.png)
+
+### Diagramas de Flujo de la creación de una cuenta
+![Diagrama de Flujo 1](public/flowchart(1).png)
+
+## END-POINTS permitidos con el token JWT
+![Diagrama de Flujo 2](public/flowchart(2).png)
+
+## Capturas de Pantalla / Ejemplos
+
+### Documentación de la API (Swagger)
+![Documentación de la API](public/doc.png)
+
+### Ejemplo de Caso de Uso (Frontend)
+Puedes probar la aplicación en vivo desde el siguiente enlace: [Demostración del Frontend](https://frontend-aarnools-projects.vercel.app/)
+
+![Vista del Frontend](public/ejem.png)
+
+> **Nota Importante:** Si el frontend demora unos segundos en responder durante la primera carga, se debe a que el backend está desplegado en una instancia gratuita de Render y entra en reposo tras un periodo de inactividad. ¡Agradecemos tu paciencia mientras se reactiva!
+
 ## Estructura del Proyecto
 
 ```text

@@ -43,6 +43,32 @@ This is a RESTful API built with **FastAPI** and **SQLAlchemy** for managing use
 - **`PATCH /tasks/{task_id}`**: Partially or totally updates a task's details by ID (restricted to the task owner).
 - **`DELETE /tasks/{task_id}`**: Deletes a task by ID (restricted to the task owner).
 
+## Diagrams and Architecture
+
+### Physical Model
+![Physical Model](public/physical_model.png)
+
+### Sequence Diagram of how the API creates a JWT Token
+![Sequence Diagram](public/sequence_diagram.png)
+
+### Flowchart of account creation
+![Flowchart 1](public/flowchart(1).png)
+
+## Allowed END-POINTS with the JWT token
+![Flowchart 2](public/flowchart(2).png)
+
+## Screenshots / Examples
+
+### API Documentation (Swagger)
+![API Documentation](public/doc.png)
+
+### Use Case Example (Frontend)
+You can test the live application here: [Frontend Demonstration](https://frontend-aarnools-projects.vercel.app/)
+
+![Frontend Interface](public/ejem.png)
+
+> **Important Note:** If the frontend takes a few seconds to respond on the initial load, it is because the backend is deployed on a free instance on Render, which spins down after a period of inactivity. We appreciate your patience while it spins back up!
+
 ## Project Structure
 
 ```text
