@@ -57,6 +57,8 @@ def auth_client(client):
         "email": "testuser@test.com",
         "password": "testpassword"
     }
-    client.post("/users/register", json=payload)
-    client.post("/users/login", data={"username": "testuser@test.com", "password": "testpassword"})
+    response_register = client.post("/users/register", json=payload)
+    assert response_register.status_code == 201
+    response_login = client.post("/users/login", data={"username": "testuser@test.com", "password": "testpassword"})
+    assert response_login.status_code == 200
     return client
