@@ -4,6 +4,10 @@ from pwdlib import PasswordHash
 import jwt
 from src.config import settings
 
+
+SECRET_KEY = settings.SECRET_KEY.get_secret_value()
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 password_hash = PasswordHash.recommended()
 DUMMY_HASH = password_hash.hash("dummy_password")   
 
@@ -15,9 +19,6 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verifica si la contraseña coincide con su versión cifrada."""
     return password_hash.verify(plain_password, hashed_password)
 
-SECRET_KEY = settings.SECRET_KEY.get_secret_value()
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     """Crea y firma un token JWT con tiempo de expiración."""
