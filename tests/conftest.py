@@ -8,6 +8,7 @@ from src.database import Base
 from src.dependencies import get_db
 from src.main import app
 from src.models import Task, User
+from src.core.utils import limiter
 
 # Base de datos en memoria SQLite aislada para ejecución rápida de pruebas
 TEST_DATABASE_URL = "sqlite:///:memory:"
@@ -20,6 +21,11 @@ engine_test = create_engine(
 )
 
 TestingSessionLocal = sessionmaker(autocommit=False, bind=engine_test)
+
+@pytest.fixture(autouse=True)
+def reset_rate_limits():
+    """Limpia la memoria del limitador de tasa de solicitudes antes de cada prueba."""
+    limiter._storage.reset()
 
 
 @pytest.fixture()
@@ -40,13 +46,14 @@ def client(db_session):
 
     def override_get_db():
         yield db_session
-
     app.dependency_overrides[get_db] = override_get_db
 
-    with TestClient(app, base_url="https://testserver") as test_client:
+    test_client = TestClient(app, base_url="https://testserver")
+    
+    try:
         yield test_client
-
-    app.dependency_overrides.clear()
+    finally:
+        app.dependency_overrides.clear()
 
 
 @pytest.fixture()
