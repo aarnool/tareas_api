@@ -24,13 +24,20 @@ def test_create_user_duplicate(client):
         "email": "testuser@test.com",
         "password": "testpassword"}
 
-    response_firt = client.post("/users/register", json=payload)
-    assert response_firt.status_code == 201
+    response = client.post("/users/register", json=payload)
+    assert response.status_code == 201
 
-    # Intento de segundo registro con las mismas credenciales
-    response_duplicate = client.post("/users/register", json=payload)
-    assert response_duplicate.status_code == 400
-    assert response_duplicate.json() == {
+    # Intento de segundo registro con el mismo username
+    payload.update({"email": "testuser2@test.com"})
+    response_duplicate_username = client.post("/users/register", json=payload)
+    assert response_duplicate_username.status_code == 400
+    assert response_duplicate_username.json() == {
+        "detail": "Email and username already registered/Correo electonico y nombre de usuario ya registrados"}
+    # Intento de segundo registro con el mismo email
+    payload.update({"username": "testuser2", "email": "testuser@test.com"})
+    response_duplicate_email = client.post("/users/register", json=payload)
+    assert response_duplicate_email.status_code == 400
+    assert response_duplicate_email.json() == {
         "detail": "Email and username already registered/Correo electonico y nombre de usuario ya registrados"}
 
 
