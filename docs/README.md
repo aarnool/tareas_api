@@ -63,7 +63,7 @@ This is a RESTful API built with **FastAPI** and **SQLAlchemy** for managing use
 ![API Documentation](public/doc.png)
 
 ### Use Case Example (Frontend)
-You can test the live application here: [Frontend Demonstration]([https://frontend-aarnools-projects.vercel.app](https://frontend-aarnools-projects.vercel.app?_vercel_share=XsVj0EgqIVLHbgq8XT3qYs8Dh1d769dS)/)
+You can test the live application here: [Frontend Demonstration](https://frontend-seven-livid-1rwmj8gd6q.vercel.app/)
 
 ![Frontend Interface](public/ejem.png)
 

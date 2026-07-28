@@ -63,7 +63,7 @@ Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gest
 ![Documentación de la API](public/doc.png)
 
 ### Ejemplo de Caso de Uso (Frontend)
-Puedes probar la aplicación en vivo desde el siguiente enlace: [Demostración del Frontend]([https://frontend-aarnools-projects.vercel.app/](https://frontend-aarnools-projects.vercel.app?_vercel_share=XsVj0EgqIVLHbgq8XT3qYs8Dh1d769dS))
+Puedes probar la aplicación en vivo desde el siguiente enlace: [Demostración del Frontend](https://frontend-seven-livid-1rwmj8gd6q.vercel.app/))
 
 ![Vista del Frontend](public/ejem.png)
 
