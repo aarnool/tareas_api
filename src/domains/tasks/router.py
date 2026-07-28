@@ -1,10 +1,11 @@
 """Módulo enrutador con endpoints para la gestión de tareas del usuario."""
 from typing import Annotated
-from fastapi import APIRouter, Body, Depends, Path, Query, status
+from fastapi import APIRouter, Request, Body, Depends, Path, Query, status
 from sqlalchemy.orm import Session
 from src.dependencies import get_current_user, get_db
 from src.domains.tasks.schemas import TaskCreate, TaskResponse, TaskUpdate
 import src.domains.tasks.service as task_service
+from src.core.utils import limiter
 
 
 router = APIRouter(
@@ -30,7 +31,8 @@ router = APIRouter(
         }
     }
 )
-def create_task(
+@limiter.limit("10/minute")  # Limita a 10 solicitudes por minuto
+def create_task(request: Request, 
     task: Annotated[TaskCreate, Body(description="The task information to create / La información de la tarea a crear")],
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[dict, Depends(get_current_user)]
@@ -62,7 +64,8 @@ def create_task(
         }
     }
 )
-def get_all_tasks(
+@limiter.limit("10/minute")  # Limita a 10 solicitudes por minuto
+def get_all_tasks(request: Request, 
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[dict, Depends(get_current_user)],
     start: Annotated[int | None, Query(
@@ -102,7 +105,8 @@ def get_all_tasks(
         }
     }
 )
-def update_task(
+@limiter.limit("10/minute")  # Limita a 10 solicitudes por minuto
+def update_task(request: Request, 
     task_id: Annotated[int, Path(description="The ID of the task to update / El ID de la tarea a actualizar")],
     task_update: Annotated[TaskUpdate, Body(description="The updated task information / La información actualizada de la tarea")],
     db: Annotated[Session, Depends(get_db)],
@@ -133,7 +137,8 @@ def update_task(
         }
     }
 )
-def delete_task(
+@limiter.limit("10/minute")  # Limita a 10 solicitudes por minuto
+def delete_task(request: Request, 
     task_id: Annotated[int, Path(description="The ID of the task to delete / El ID de la tarea a eliminar")],
     db: Annotated[Session, Depends(get_db)],
     current_user: Annotated[dict, Depends(get_current_user)]

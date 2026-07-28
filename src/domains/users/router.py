@@ -1,12 +1,13 @@
 """Módulo enrutador con endpoints para gestión y autenticación de usuarios."""
 from typing import Annotated
-from fastapi import APIRouter, Body, Depends, Response, status
+from fastapi import APIRouter, Request, Body, Depends, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from src.dependencies import get_current_user, get_db
 from src.domains.users.schemas import MessageResponse, UserCreate, UserResponse
 import src.domains.users.service as user_service
+from src.core.utils import limiter
 
 
 router = APIRouter(
@@ -39,7 +40,9 @@ router = APIRouter(
         }
     }
 )
+@limiter.limit("10/hour")  # Limita a 10 solicitudes por hora
 def register_user(
+    request: Request, 
     user: Annotated[
         UserCreate,
         Body(description="The user information to create / La información del usuario a crear")
@@ -79,7 +82,9 @@ def register_user(
         }
     }
 )
+@limiter.limit("5/minute")  # Limita a 10 solicitudes por minuto
 def login_user(
+    request: Request, 
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Annotated[Session, Depends(get_db)],
     response: Response
@@ -138,7 +143,9 @@ def login_user(
         }
     }
 )
+@limiter.limit("10/minute")  # Limita a 10 solicitudes por minuto
 def get_current_user_info(
+    request: Request, 
     current_user: Annotated[dict, Depends(get_current_user)],
     db: Annotated[Session, Depends(get_db)]
 ):
