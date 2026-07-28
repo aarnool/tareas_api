@@ -23,17 +23,6 @@ router = APIRouter(
 @router.post(
     "/register",
     summary="Create a new user / Crear un nuevo usuario",
-    description="""
-**Register a new user account / Registrar una nueva cuenta de usuario**
-
-Creates a new user in the database with the provided credentials.
-Crea un nuevo usuario en la base de datos con las credenciales proporcionadas.
-
-### Validations / Validaciones:
-- **username**: Must be unique in the system / Debe ser único en el sistema.
-- **email**: Must have a valid format and be unique / Debe tener un formato válido y ser único.
-- **password**: Securely hashed before storing / Se cifra de manera segura antes de almacenarse.
-""",
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
     response_description="User successfully registered / Usuario registrado exitosamente",
@@ -57,24 +46,23 @@ def register_user(
     ],
     db: Annotated[Session, Depends(get_db)]
 ):
-    """Registra un nuevo usuario en la base de datos validando sus datos y cifrando su contraseña."""
+    """
+    **Register a new user account / Registrar una nueva cuenta de usuario**
+
+    Creates a new user in the database with the provided credentials.
+    Crea un nuevo usuario en la base de datos con las credenciales proporcionadas.
+
+    ### Validations / Validaciones:
+    - **username**: Must be unique in the system / Debe ser único en el sistema.
+    - **email**: Must have a valid format and be unique / Debe tener un formato válido y ser único.
+    - **password**: Securely hashed before storing / Se cifra de manera segura antes de almacenarse.
+    """
     return user_service.create_user(db, user)
 
 
 @router.post(
     "/login",
     summary="Authenticate a user / Autenticar un usuario",
-    description="""
-**User Authentication / Autenticación de usuario**
-
-Authenticates a user using OAuth2 compatible form data and sets a secure JWT cookie.
-Autentica al usuario mediante formulario OAuth2 y genera una cookie segura JWT.
-
-### Details / Detalles:
-- **username**: Enter the registered **email** address / Ingresa el **correo electrónico** registrado.
-- **password**: Enter the user's password / Ingresa la contraseña del usuario.
-- **Cookie**: On success, an HTTP-only cookie named `auth_token` is set in the client browser / Al tener éxito, se configura una cookie HTTP-only llamada `auth_token`.
-""",
     response_model=MessageResponse,
     status_code=status.HTTP_200_OK,
     response_description="Login confirmation message and HTTP-only cookie / Confirmación y cookie de sesión",
@@ -96,22 +84,23 @@ def login_user(
     db: Annotated[Session, Depends(get_db)],
     response: Response
 ):
-    """Autentica al usuario verificando sus credenciales y genera la cookie de sesión JWT."""
+    """
+    **User Authentication / Autenticación de usuario**
+
+    Authenticates a user using OAuth2 compatible form data and sets a secure JWT cookie.
+    Autentica al usuario mediante formulario OAuth2 y genera una cookie segura JWT.
+
+    ### Details / Detalles:
+    - **username**: Enter the registered **email** address / Ingresa el **correo electrónico** registrado.
+    - **password**: Enter the user's password / Ingresa la contraseña del usuario.
+    - **Cookie**: On success, an HTTP-only cookie named `auth_token` is set in the client browser / Al tener éxito, se configura una cookie HTTP-only llamada `auth_token`.
+    """
     return user_service.login_user(db, form_data, response)
 
 
 @router.get(
     "/me",
     summary="Get current user information / Obtener información del usuario actual",
-    description="""
-**Retrieve Current User Profile / Recuperar perfil del usuario autenticado**
-
-Returns the profile information of the user making the request.
-Devuelve la información de perfil del usuario que realiza la petición.
-
-### Security / Seguridad:
-Requires a valid `auth_token` cookie in the request headers / Requiere una cookie `auth_token` válida en las cabeceras.
-""",
     response_model=UserResponse,
     status_code=status.HTTP_200_OK,
     response_description="Authenticated user profile data / Datos del usuario autenticado",
@@ -153,22 +142,21 @@ def get_current_user_info(
     current_user: Annotated[dict, Depends(get_current_user)],
     db: Annotated[Session, Depends(get_db)]
 ):
-    """Obtiene y devuelve los datos de perfil del usuario actualmente autenticado."""
+    """
+    **Retrieve Current User Profile / Recuperar perfil del usuario autenticado**
+
+    Returns the profile information of the user making the request.
+    Devuelve la información de perfil del usuario que realiza la petición.
+
+    ### Security / Seguridad:
+    Requires a valid `auth_token` cookie in the request headers / Requiere una cookie `auth_token` válida en las cabeceras.
+    """
     return user_service.get_user_by_id(db, current_user["user_id"])
 
 
 @router.post(
     "/logout",
     summary="Log out user / Cerrar sesión del usuario",
-    description="""
-**User Logout / Cierre de sesión de usuario**
-
-Terminates the current user session by deleting the authentication cookie from the client browser.
-Termina la sesión actual del usuario eliminando la cookie de autenticación del navegador cliente.
-
-### Details / Detalles:
-- Instructs the browser to remove the `auth_token` cookie by setting its expiration in the past / Instruye al navegador para eliminar la cookie `auth_token`.
-""",
     response_model=MessageResponse,
     status_code=status.HTTP_200_OK,
     response_description="Logout confirmation message / Mensaje de confirmación de cierre de sesión",
@@ -186,7 +174,15 @@ Termina la sesión actual del usuario eliminando la cookie de autenticación del
     }
 )
 def logout(response: Response):
-    """Cierra la sesión del usuario eliminando la cookie de autenticación del navegador."""
+    """
+    **User Logout / Cierre de sesión de usuario**
+
+    Terminates the current user session by deleting the authentication cookie from the client browser.
+    Termina la sesión actual del usuario eliminando la cookie de autenticación del navegador cliente.
+
+    ### Details / Detalles:
+    - Instructs the browser to remove the `auth_token` cookie by setting its expiration in the past / Instruye al navegador para eliminar la cookie `auth_token`.
+    """
     response.delete_cookie(
         "auth_token", 
         path="/",
