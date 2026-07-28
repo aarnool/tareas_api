@@ -24,8 +24,9 @@ This is a RESTful API built with **FastAPI** and **SQLAlchemy** for managing use
    fastapi dev src/main.py
    ```
    The API will be available at `http://localhost:8000`. 
-   You can access the interactive documentation (Swagger UI) at `http://localhost:8000/docs`.
+   You can access the interactive documentation (Swagger UI) without cloning or running in `https://tareas-api-lc94.onrender.com/docs`.
 
+> **Important Note:** If the documentation takes a few seconds to load initially, it is because the backend is deployed on a free Render instance that goes into sleep mode after a period of inactivity. We appreciate your patience while it wakes up!
 ## API Endpoints
 
 ### Root

@@ -24,7 +24,11 @@ Esta es una API RESTful construida con **FastAPI** y **SQLAlchemy** para la gest
    fastapi dev src/main.py
    ```
    La API estará disponible en `http://localhost:8000`. 
-   Puedes acceder a la documentación interactiva (Swagger UI) en `http://localhost:8000/docs`.
+   Puedes acceder a la documentación interactiva (Swagger UI) sin clonar ni ejecutar en `https://tareas-api-lc94.onrender.com/docs`.
+
+> **Nota Importante:** Si la documentacion demora unos segundos en responder durante la primera carga, se debe a que el backend está desplegado en una instancia gratuita de Render y entra en reposo tras un periodo de inactividad. ¡Agradecemos tu paciencia mientras se reactiva!
+
+
 
 ## Endpoints de la API
 
